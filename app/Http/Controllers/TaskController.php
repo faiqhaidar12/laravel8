@@ -11,12 +11,22 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         if ($request->search) {
-            $tasks = Task::where('task', 'LIKE', "%$request->search%")->get();
-            return $tasks;
+            $tasks = Task::where('task', 'LIKE', "%$request->search%")->paginate(3);
+            return view('task.index', [
+                'data' => $tasks
+            ]);
         }
 
-        $tasks = Task::all();
-        return $tasks;
+        $tasks = Task::paginate(3);
+        return view('task.index', [
+            'data' => $tasks
+        ]);
+    }
+
+    public function create()
+    {
+
+        return view('task.create');
     }
 
     public function store(Request $request)
@@ -26,13 +36,19 @@ class TaskController extends Controller
             'user' => $request->user,
         ]);
 
-        return 'Sukses';
+        return redirect('tasks');
     }
 
     public function show($id)
     {
         $task = Task::find($id);
         return $task;
+    }
+
+    public function edit($id)
+    {
+        $task = Task::find($id);
+        return view('task.edit', compact('task'));
     }
 
 
@@ -43,7 +59,7 @@ class TaskController extends Controller
             'task' => $request->task,
             'user' => $request->user
         ]);
-        return $task;
+        return redirect('/tasks');
     }
 
     public function destroy($id)
@@ -51,6 +67,6 @@ class TaskController extends Controller
         $task = Task::find($id);
         $task->delete();
 
-        return 'Sukses';
+        return  redirect('/tasks');
     }
 }
