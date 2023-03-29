@@ -6,8 +6,17 @@
                 <li><a href="{{ url('/tasks') }}" class="nav-link px-2 text-white">Task</a></li>
             </ul>
             <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2">Login</button>
-                <button type="button" class="btn btn-warning">Sign-up</button>
+                @guest
+                    <a href="{{ route('login') }}" type="button" class="btn btn-outline-light me-2">Login</a>
+                    <a href="{{ route('register') }}" type="button" class="btn btn-warning">Sign-up</a>
+                @else
+                    <a href="{{ route('logout') }}" type="button" class="btn btn-warning"
+                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">Halo
+                        {{ Auth::user()->name }}</a>
+                    <form action="{{ route('logout') }}" id="logout-form" method="POST">
+                        @csrf
+                    </form>
+                @endguest
             </div>
         </div>
     </div>
